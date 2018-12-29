@@ -1,0 +1,1 @@
+web: MIX_ENV=prod elixir --sname web -S mix run --no-halt
