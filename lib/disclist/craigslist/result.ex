@@ -3,7 +3,7 @@ defmodule Disclist.Craigslist.Result do
   import Ecto.Changeset
 
   schema "craigslist_results" do
-    field(:data_id, :id)
+    field(:data_id, :integer)
     field(:datetime, :naive_datetime)
     field(:price, :float)
     field(:title, :string)

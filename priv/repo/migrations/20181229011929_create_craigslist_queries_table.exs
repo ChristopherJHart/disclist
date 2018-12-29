@@ -5,7 +5,7 @@ defmodule Disclist.Repo.Migrations.CreateCraigslistQueriesTable do
     create table("craigslist_queries") do
       add :city, :string, null: false
       add :query_string, :string, null: false
-      add :channel_id, :id, null: false
+      add :channel_id, :bigint, null: false
     end
     create unique_index("craigslist_queries", [:city, :query_string])
   end

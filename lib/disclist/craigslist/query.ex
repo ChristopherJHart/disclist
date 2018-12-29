@@ -5,7 +5,7 @@ defmodule Disclist.Craigslist.Query do
   schema "craigslist_queries" do
     field(:city, :string)
     field(:query_string, :string)
-    field(:channel_id, :id)
+    field(:channel_id, :integer)
   end
 
   def changeset(query, params \\ %{}) do

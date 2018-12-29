@@ -3,7 +3,7 @@ defmodule Disclist.Repo.Migrations.CreateCraigslistResultsTable do
 
   def change do
     create table("craigslist_results") do
-      add :data_id, :id
+      add :data_id, :bigint
       add :datetime, :naive_datetime
       add :price, :float
       add :title, :string
