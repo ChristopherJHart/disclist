@@ -2,7 +2,7 @@ defmodule Disclist.Craigslist.QueryScraper do
   use GenServer
   require Logger
   alias Disclist.{DiscordConsumer, Craigslist, Craigslist.Query}
-  @checkup_ms 900000
+  @checkup_ms 900_000
 
   def child_spec([%Query{} = query]) do
     %{
@@ -28,22 +28,25 @@ defmodule Disclist.Craigslist.QueryScraper do
 
   def handle_continue([result | rest], query) do
     if Craigslist.get_result(data_id: result.data_id) do
-      Logger.info "Already requested: #{result.data_id}"
+      Logger.info("Already requested: #{result.data_id}")
       {:noreply, query, {:continue, rest}}
     else
       params = Map.merge(result, Craigslist.result(result.url))
+
       case Craigslist.new_result(params) do
-        {:ok, result} -> 
+        {:ok, result} ->
           DiscordConsumer.publish_result(query, result)
-        changeset -> 
-          Logger.error "Failed to get result: #{inspect(changeset)}"
+
+        changeset ->
+          Logger.error("Failed to get result: #{inspect(changeset)}")
       end
+
       {:noreply, query, {:continue, rest}}
     end
   end
 
   def handle_continue([], query) do
-    Logger.info "Will checkup again in #{@checkup_ms} milliseconds."
+    Logger.info("Will checkup again in #{@checkup_ms} milliseconds.")
     {:noreply, query, @checkup_ms}
   end
 end

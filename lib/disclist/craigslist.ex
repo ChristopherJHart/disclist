@@ -39,9 +39,11 @@ defmodule Disclist.Craigslist do
   end
 
   def search_client(city_id, query_string) when is_binary(query_string) do
-    params = query_string
+    params =
+      query_string
       |> URI.query_decoder()
       |> Enum.to_list()
+
     search_client(city_id, params)
   end
 

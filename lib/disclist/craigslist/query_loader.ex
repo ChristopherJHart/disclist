@@ -4,7 +4,7 @@ defmodule Disclist.Craigslist.QueryLoader do
   @checkup_time 60_000
 
   def checkup do
-    send __MODULE__, :timeout
+    send(__MODULE__, :timeout)
   end
 
   def start_link(args) do
@@ -19,6 +19,7 @@ defmodule Disclist.Craigslist.QueryLoader do
     for child <- Craigslist.list_queries() do
       ScraperSupervisor.start_child(child)
     end
+
     {:noreply, state, @checkup_time}
   end
 end

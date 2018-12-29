@@ -5,11 +5,14 @@ defmodule Disclist.DiscordConsumer do
   alias Disclist.{Craigslist, Craigslist.Query, Craigslist.Result}
 
   @id System.get_env("DISCORD_ID")
-  @command_start "<@#{@id}>"
+  @id ||
+    Mix.raise("""
+    No id configured
+    """)
 
-  @id || Mix.raise("""
-  No id configured
-  """)
+  @id String.to_integer(@id)
+
+  @command_start "<@#{@id}>"
 
   @help_txt """
   ```md
@@ -18,6 +21,9 @@ defmodule Disclist.DiscordConsumer do
   ## ADD
   * add CITY QUERYSTRING - Add a city by querystring
   * add CITY URL - Add a city by a url
+
+  ## PING
+  * ping params - Send back whatever was sent in.
   ```
   """
 
@@ -30,7 +36,7 @@ defmodule Disclist.DiscordConsumer do
       {:ok, _} -> Craigslist.mark_result(result)
       error -> error
     end
-  end 
+  end
 
   def result_txt(result) do
     """
@@ -51,14 +57,11 @@ defmodule Disclist.DiscordConsumer do
 
   def handle_event({:MESSAGE_CREATE, {msg}, _ws_state}) do
     case msg.content do
-      # "ping!" ->
-        # Api.create_message(msg.channel_id, "I copy and pasted this code")
-      
       @command_start <> command ->
         handle_command(String.trim(command), msg)
+
       _ ->
-        IO.inspect(msg, label: "msg")
-        :ignore
+        :noop
     end
   end
 
@@ -72,42 +75,64 @@ defmodule Disclist.DiscordConsumer do
     Api.create_message(msg.channel_id, @help_txt)
   end
 
+  def handle_command("ping" <> extra, msg) do
+    Api.create_message(msg.channel_id, "pong " <> extra)
+  end
+
   def handle_command("add" <> _ = add_command, msg) do
     case String.split(add_command, " ") do
       ["add", "http" <> _ = url] ->
         %{host: host, query: query_string} = URI.parse(url)
         [city, "craigslist", "org"] = String.split(host, ".")
+
         params = %{
-          city: city, 
+          city: city,
           query_string: query_string,
           channel_id: msg.channel_id
         }
+
         case Craigslist.new_query(params) do
-          {:ok, %Query{}} -> 
+          {:ok, %Query{}} ->
             url = Craigslist.url(city) <> "/search/sss" <> "?" <> query_string
             Api.create_message(msg.channel_id, "Added #{url}")
             Craigslist.QueryLoader.checkup()
+
           {:error, changeset} ->
             errors = for {key, {msg, _}} <- changeset.errors, do: "`#{key}` => #{msg}"
-            Api.create_message(msg.channel_id, ["Error adding city" | errors] |> Enum.join("\n\t"))
+
+            Api.create_message(
+              msg.channel_id,
+              ["Error adding city" | errors] |> Enum.join("\n\t")
+            )
         end
+
       ["add", city, query_string] ->
         params = %{
-          city: city, 
+          city: city,
           query_string: query_string,
           channel_id: msg.channel_id
         }
+
         case Craigslist.new_query(params) do
-          {:ok, %Query{}} -> 
+          {:ok, %Query{}} ->
             url = Craigslist.url(city) <> "/search/sss" <> "?" <> query_string
             Api.create_message(msg.channel_id, "Added #{url}")
             Craigslist.QueryLoader.checkup()
+
           {:error, changeset} ->
             errors = for {key, {msg, _}} <- changeset.errors, do: "`#{key}` => #{msg}"
-            Api.create_message(msg.channel_id, ["Error adding city" | errors] |> Enum.join("\n\t"))
+
+            Api.create_message(
+              msg.channel_id,
+              ["Error adding city" | errors] |> Enum.join("\n\t")
+            )
         end
+
       ["add" | _] ->
-        Api.create_message(msg.channel_id, "USAGE: `add CITY QUERYSTRING - Add a city and querystring`")
+        Api.create_message(
+          msg.channel_id,
+          "USAGE: `add CITY QUERYSTRING - Add a city and querystring`"
+        )
     end
   end
 

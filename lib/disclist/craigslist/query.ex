@@ -1,7 +1,6 @@
 defmodule Disclist.Craigslist.Query do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Disclist.Craigslist.Query
 
   schema "craigslist_queries" do
     field(:city, :string)
@@ -13,7 +12,9 @@ defmodule Disclist.Craigslist.Query do
     query
     |> cast(params, [:city, :query_string, :channel_id])
     |> validate_required([:city, :query_string, :channel_id])
-    |> unsafe_validate_unique([:city, :query_string], Disclist.Repo, message: "Querystring for that city already exists")
+    |> unsafe_validate_unique([:city, :query_string], Disclist.Repo,
+      message: "Querystring for that city already exists"
+    )
     |> validate_query_string()
   end
 
