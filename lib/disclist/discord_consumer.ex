@@ -79,16 +79,16 @@ defmodule Disclist.DiscordConsumer do
   end
 
   def handle_command("list" <> _, msg) do
-    urls = 
+    urls =
       Craigslist.list_queries()
-      |> Enum.filter(fn(%{channel_id: channel_id}) -> 
-        channel_id == msg.channel_id 
+      |> Enum.filter(fn %{channel_id: channel_id} ->
+        channel_id == msg.channel_id
       end)
-      |> Enum.map(fn(query) -> 
-          Craigslist.url(query.city) <> "/search/sss" <> "?" <> query.query_string
+      |> Enum.map(fn query ->
+        Craigslist.url(query.city) <> "/search/sss" <> "?" <> query.query_string
       end)
       |> Enum.join("\n")
-    
+
     Api.create_message(msg.channel_id, "Currently tracked urls: #{urls}")
   end
 
