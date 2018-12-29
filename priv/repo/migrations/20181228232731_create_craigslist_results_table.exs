@@ -6,9 +6,9 @@ defmodule Disclist.Repo.Migrations.CreateCraigslistResultsTable do
       add :data_id, :bigint
       add :datetime, :naive_datetime
       add :price, :float
-      add :title, :string
+      add :title, :text
       add :url, :string
-      add :postingbody, :string
+      add :postingbody, :text
       add :image_urls, {:array, :string}
       add :published, :boolean, default: false
     end
