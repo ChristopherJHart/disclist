@@ -1,6 +1,7 @@
 defmodule Disclist.Craigslist do
   alias Disclist.{Repo, Craigslist.Query, Craigslist.Result}
   use Tesla
+  import Ecto.Query, warn: false
 
   # plug(Tesla.Middleware.Logger)
 
@@ -12,6 +13,18 @@ defmodule Disclist.Craigslist do
 
   def list_queries do
     Repo.all(Query)
+  end
+
+  def get_query_by_city_and_query_string(channel_id, city, query_string) do
+    Repo.one(
+      from(q in Query,
+        where: q.channel_id == ^channel_id and q.city == ^city and q.query_string == ^query_string
+      )
+    )
+  end
+
+  def delete_query!(%Query{} = query) do
+    Repo.delete!(query)
   end
 
   def new_result(params) do

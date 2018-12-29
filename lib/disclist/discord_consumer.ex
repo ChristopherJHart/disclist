@@ -20,7 +20,10 @@ defmodule Disclist.DiscordConsumer do
   # Help
 
   ## ADD
-  * add CITY URL - Add a city by a url
+  * add URL - Add a city by a url
+
+  ## DELETE
+  * delete URL - Delete a city from being scraped
 
   ## PING
   * ping params - Send back whatever was sent in.
@@ -103,6 +106,28 @@ defmodule Disclist.DiscordConsumer do
     Api.create_message(msg.channel_id, "Currently tracked urls: #{urls}")
   end
 
+  def handle_command("delete" <> _ = delete_command, msg) do
+    case String.split(delete_command, " ") do
+      ["delete", "http" <> _ = url] ->
+        %{host: host, query: query_string} = URI.parse(url)
+        [city, "craigslist", "org"] = String.split(host, ".")
+
+        if query =
+             Craigslist.get_query_by_city_and_query_string(msg.channel_id, city, query_string) do
+          Craigslist.delete_query!(query)
+          Api.create_message(msg.channel_id, "#{url} deleted")
+        else
+          Api.create_message(msg.channel_id, "Could not find #{url}")
+        end
+
+      ["delete" | _] ->
+        Api.create_message(
+          msg.channel_id,
+          "USAGE: `delete URL` - delete a url from being scraped"
+        )
+    end
+  end
+
   def handle_command("add" <> _ = add_command, msg) do
     case String.split(add_command, " ") do
       ["add", "http" <> _ = url] ->
@@ -133,7 +158,7 @@ defmodule Disclist.DiscordConsumer do
       ["add" | _] ->
         Api.create_message(
           msg.channel_id,
-          "USAGE: `add url - Add a url to scrape`"
+          "USAGE: `add URL` - Add a url to scrape"
         )
     end
   end
