@@ -3,6 +3,7 @@ defmodule Disclist.DiscordConsumer do
   alias Nostrum.Api
 
   alias Disclist.{Craigslist, Craigslist.Query, Craigslist.Result}
+  alias Disclist.Web.HealthCheckup
 
   @id System.get_env("DISCORD_ID")
   @id ||
@@ -23,6 +24,9 @@ defmodule Disclist.DiscordConsumer do
 
   ## PING
   * ping params - Send back whatever was sent in.
+
+  ## CHECKUP
+  * checkup - Self checkup
   ```
   """
 
@@ -76,6 +80,13 @@ defmodule Disclist.DiscordConsumer do
 
   def handle_command("ping" <> extra, msg) do
     Api.create_message(msg.channel_id, "pong " <> extra)
+  end
+
+  def handle_command("checkup" <> _, msg) do
+    case HealthCheckup.checkup() do
+      {:ok, _} -> Api.create_message(msg.channel_id, "ok")
+      {:error, _} -> Api.create_message(msg.channel_id, "error")
+    end
   end
 
   def handle_command("list" <> _, msg) do

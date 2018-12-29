@@ -17,13 +17,18 @@ defmodule Disclist.Web.HealthCheckup do
   end
 
   def handle_info(:timeout, state) do
-    case :httpc.request(to_charlist(@checkup_url)) do
+    case checkup() do
       {:ok, _} ->
+        Logger.info("Still up and running")
         {:noreply, state, @checkup_time_ms}
 
       error ->
         Logger.error("Error checking health: #{inspect(error)}")
         {:noreply, state, @error_time_ms}
     end
+  end
+
+  def checkup do
+    :httpc.request(to_charlist(@checkup_url))
   end
 end
