@@ -2,7 +2,7 @@ defmodule Disclist.Craigslist do
   alias Disclist.{Repo, Craigslist.Query, Craigslist.Result}
   use Tesla
 
-  plug(Tesla.Middleware.Logger)
+  # plug(Tesla.Middleware.Logger)
 
   def new_query(params) do
     %Query{}
