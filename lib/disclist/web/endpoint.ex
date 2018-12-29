@@ -13,7 +13,7 @@ defmodule Disclist.Web.Endpoint do
       |> Keyword.merge(args)
 
     children =
-      if port = endpoint_config[:port] do
+      if port = endpoint_config[:port] || System.get_env("PORT") do
         port = String.to_integer(port)
         host = endpoint_config[:host] || "localhost"
         Logger.info("Starting endpoing on http://#{host}:#{port}")
