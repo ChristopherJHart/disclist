@@ -1,4 +1,4 @@
-defmodule Disclist.Router do
+defmodule Disclist.Web.Router do
   use Plug.Router
 
   plug(:match)

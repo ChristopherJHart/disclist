@@ -12,7 +12,7 @@ defmodule Disclist.Application do
       Disclist.DiscordConsumer,
       Disclist.Craigslist.ScraperSupervisor,
       Disclist.Craigslist.QueryLoader,
-      Disclist.Endpoint
+      Disclist.Web.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,6 +1,6 @@
-defmodule Disclist.Endpoint do
+defmodule Disclist.Web.Endpoint do
   use Supervisor
-  alias Disclist.Router
+  alias Disclist.Web.{Router, HealthCheckup}
   require Logger
 
   def start_link(args) do
@@ -19,7 +19,8 @@ defmodule Disclist.Endpoint do
         Logger.info("Starting endpoing on http://#{host}:#{port}")
 
         [
-          {Plug.Cowboy, scheme: :http, plug: Router, options: [port: port]}
+          {Plug.Cowboy, scheme: :http, plug: Router, options: [port: port]},
+          HealthCheckup
         ]
       else
         []
