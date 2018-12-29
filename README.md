@@ -1,21 +1,41 @@
 # Disclist
 
-**TODO: Add description**
+Discord Bot to scrape GitHub
 
-## Installation
+[demo invite link](https://discord.gg/nDHADVC)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `disclist` to your list of dependencies in `mix.exs`:
+# Usage
 
-```elixir
-def deps do
-  [
-    {:disclist, "~> 0.1.0"}
-  ]
-end
+## Commands
+
+Here are the basic commands implemeted so far
+
+### Add
+Add a url to be scraped
+```
+@Disclist add https://slo.craigslist.org/search/hhh?query=hot%20dog%20stand&sort=rel
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/disclist](https://hexdocs.pm/disclist).
+### Remove 
+Remove a url from being scraped
+```
+@Disclist remove https://slo.craigslist.org/search/hhh?query=hot%20dog%20stand&sort=rel
+```
 
+### List
+List all urls being scraped
+```
+@Disclist list
+```
+
+### Ping
+Returns all data passed into it
+```
+@Disclist ping hello world
+```
+
+### Checkup
+Checks health. (This is a Heroku-ism. Heroku sleeps apps that aren't active)
+```
+@Disclist checkup
+```
