@@ -19,7 +19,6 @@ defmodule Disclist.DiscordConsumer do
   # Help
 
   ## ADD
-  * add CITY QUERYSTRING - Add a city by querystring
   * add CITY URL - Add a city by a url
 
   ## PING
@@ -79,6 +78,20 @@ defmodule Disclist.DiscordConsumer do
     Api.create_message(msg.channel_id, "pong " <> extra)
   end
 
+  def handle_command("list" <> _, msg) do
+    urls = 
+      Craigslist.list_queries()
+      |> Enum.filter(fn(%{channel_id: channel_id}) -> 
+        channel_id == msg.channel_id 
+      end)
+      |> Enum.map(fn(query) -> 
+          Craigslist.url(query.city) <> "/search/sss" <> "?" <> query.query_string
+      end)
+      |> Enum.join("\n")
+    
+    Api.create_message(msg.channel_id, "Currently tracked urls: #{urls}")
+  end
+
   def handle_command("add" <> _ = add_command, msg) do
     case String.split(add_command, " ") do
       ["add", "http" <> _ = url] ->
@@ -106,32 +119,10 @@ defmodule Disclist.DiscordConsumer do
             )
         end
 
-      ["add", city, query_string] ->
-        params = %{
-          city: city,
-          query_string: query_string,
-          channel_id: msg.channel_id
-        }
-
-        case Craigslist.new_query(params) do
-          {:ok, %Query{}} ->
-            url = Craigslist.url(city) <> "/search/sss" <> "?" <> query_string
-            Api.create_message(msg.channel_id, "Added #{url}")
-            Craigslist.QueryLoader.checkup()
-
-          {:error, changeset} ->
-            errors = for {key, {msg, _}} <- changeset.errors, do: "`#{key}` => #{msg}"
-
-            Api.create_message(
-              msg.channel_id,
-              ["Error adding city" | errors] |> Enum.join("\n\t")
-            )
-        end
-
       ["add" | _] ->
         Api.create_message(
           msg.channel_id,
-          "USAGE: `add CITY QUERYSTRING - Add a city and querystring`"
+          "USAGE: `add url - Add a url to scrape`"
         )
     end
   end
