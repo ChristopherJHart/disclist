@@ -6,6 +6,10 @@ Discord Bot to scrape GitHub
 
 Too add this bot to your own server click [this link](https://discordapp.com/api/oauth2/authorize?client_id=528335723124883469&permissions=51200&scope=bot)
 
+## Screenshots
+
+<img src="https://raw.githubusercontent.com/ConnorRigby/disclist/master/assets/Screenshot01.png" width=960>
+
 # Usage
 
 ## Commands

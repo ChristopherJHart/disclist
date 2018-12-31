@@ -42,8 +42,8 @@ defmodule Disclist.DiscordConsumer do
 
     embed =
       %Nostrum.Struct.Embed{}
-      |> put_title(result.title)
-      |> put_description(to_string(result.postingbody))
+      |> put_title(result.title || "*No title*")
+      |> put_description(to_string(result.postingbody || "*No post body*"))
 
     embed =
       if result.url do
@@ -54,8 +54,8 @@ defmodule Disclist.DiscordConsumer do
 
     embed =
       embed
-      |> put_field("Price", to_string(result.price))
-      |> put_field("Date", to_string(result.datetime))
+      |> put_field("Price", to_string(result.price || "*No price*"))
+      |> put_field("Posted", Timex.from_now(result.datetime || DateTime.utc_now()))
 
     embed =
       if image_url = List.first(result.image_urls) do
