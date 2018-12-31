@@ -4,6 +4,8 @@ Discord Bot to scrape GitHub
 
 [demo invite link](https://discord.gg/nDHADVC)
 
+Too add this bot to your own server click [this link](https://discordapp.com/api/oauth2/authorize?client_id=528335723124883469&permissions=51200&scope=bot)
+
 # Usage
 
 ## Commands
