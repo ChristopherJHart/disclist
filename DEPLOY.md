@@ -10,3 +10,13 @@ heroku config:set DISCORD_ID=1234567890
 DATABASE_URL=$(heroku config:get DATABASE_URL) mix ecto.migrate
 git push heroku master
 ```
+
+## Console to running app
+
+```bash
+heroku ps:exec
+```
+
+```bash
+iex --sname console --remsh web@${HOSTNAME}
+```

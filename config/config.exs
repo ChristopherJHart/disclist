@@ -16,6 +16,6 @@ config :disclist, Disclist.Repo,
 
 config :disclist, Disclist.Endpoint, port: System.get_env("PORT")
 
-config :logger, 
+config :logger,
   handle_otp_reports: true,
   handle_sasl_reports: true

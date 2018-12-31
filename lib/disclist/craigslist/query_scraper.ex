@@ -15,7 +15,7 @@ defmodule Disclist.Craigslist.QueryScraper do
   end
 
   def start_link(%Query{} = query) do
-    GenServer.start_link(__MODULE__, query, name: __MODULE__)
+    GenServer.start_link(__MODULE__, query)
   end
 
   def init(query) do
