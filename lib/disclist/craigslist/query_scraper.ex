@@ -46,7 +46,11 @@ defmodule Disclist.Craigslist.QueryScraper do
   end
 
   def handle_continue([], query) do
-    Logger.info("Will checkup again in #{@checkup_ms} milliseconds.")
-    {:noreply, query, @checkup_ms}
+    checkup = fuzz(@checkup_ms)
+    from_now = Timex.from_now(Timex.shift(DateTime.utc_now(), milliseconds: checkup))
+    Logger.info("Will checkup on #{inspect(query)} again #{from_now}")
+    {:noreply, query, checkup}
   end
+
+  def fuzz(millis), do: millis + :rand.uniform(60_500)
 end

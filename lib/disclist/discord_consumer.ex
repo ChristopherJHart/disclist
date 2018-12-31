@@ -38,23 +38,36 @@ defmodule Disclist.DiscordConsumer do
   end
 
   def publish_result(%Query{channel_id: channel_id}, %Result{} = result) do
-    case Api.create_message(channel_id, result_txt(result)) do
+    import Nostrum.Struct.Embed
+
+    embed =
+      %Nostrum.Struct.Embed{}
+      |> put_title(result.title)
+      |> put_description(to_string(result.postingbody))
+
+    embed =
+      if result.url do
+        put_url(embed, result.url)
+      else
+        embed
+      end
+
+    embed =
+      embed
+      |> put_field("Price", to_string(result.price))
+      |> put_field("Date", to_string(result.datetime))
+
+    embed =
+      if image_url = List.first(result.image_urls) do
+        put_image(embed, image_url)
+      else
+        embed
+      end
+
+    case Api.create_message(channel_id, embed: embed) do
       {:ok, _} -> Craigslist.mark_result(result)
       error -> error
     end
-  end
-
-  def result_txt(result) do
-    """
-    #{result.title}
-    URL: #{result.url}
-    Price: #{result.price}
-    Date: #{result.datetime}
-
-    #{result.postingbody}
-
-    #{List.first(result.image_urls)}
-    """
   end
 
   def handle_event({:MESSAGE_CREATE, {%{author: %{id: @id}}}, _ws_state}) do
