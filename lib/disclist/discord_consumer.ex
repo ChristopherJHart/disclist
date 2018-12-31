@@ -85,6 +85,19 @@ defmodule Disclist.DiscordConsumer do
     Api.create_message(msg.channel_id, "pong " <> extra)
   end
 
+  def handle_command("stats" <> _, msg) do
+    unique_results = Disclist.Stats.count_total_results()
+    unique_queries = Disclist.Stats.count_total_queries()
+    unique_channels = Disclist.Stats.count_total_channels()
+
+    data = """
+    Currently #{unique_results} unique Craigslist posts scraped by #{unique_queries} 
+    unique queries published to #{unique_channels} unique Discord channels.
+    """
+
+    Api.create_message(msg.channel_id, data)
+  end
+
   def handle_command("checkup" <> _, msg) do
     case HealthCheckup.checkup() do
       {:ok, _} -> Api.create_message(msg.channel_id, "ok")
