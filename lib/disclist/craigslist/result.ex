@@ -5,6 +5,7 @@ defmodule Disclist.Craigslist.Result do
   schema "craigslist_results" do
     field(:data_id, :integer)
     field(:datetime, :naive_datetime)
+    field(:result_datetime, :naive_datetime)
     field(:price, :float)
     field(:title, :string)
     field(:url, :string)
@@ -18,6 +19,7 @@ defmodule Disclist.Craigslist.Result do
     |> cast(params, [
       :data_id,
       :datetime,
+      :result_datetime,
       :price,
       :title,
       :url,

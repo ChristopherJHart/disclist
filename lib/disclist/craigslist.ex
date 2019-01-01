@@ -113,12 +113,21 @@ defmodule Disclist.Craigslist do
         |> Floki.find(".result-title")
         |> decode_url_and_id()
 
-      datetime =
+      result_datetime =
         html
         |> Floki.find(".result-date")
         |> decode_datetime()
 
-      [%{price: price, url: url, data_id: data_id, title: title, datetime: datetime} | acc]
+      [
+        %{
+          price: price,
+          url: url,
+          data_id: data_id,
+          title: title,
+          result_datetime: result_datetime
+        }
+        | acc
+      ]
     end)
   end
 
@@ -134,7 +143,12 @@ defmodule Disclist.Craigslist do
       |> Floki.find("img")
       |> Enum.map(fn {"img", [{"src", img} | _], _} -> img end)
 
-    %{postingbody: postingbody, image_urls: image_urls}
+    datetime =
+      html
+      |> Floki.find(".date")
+      |> decode_datetime()
+
+    %{postingbody: postingbody, image_urls: image_urls, datetime: datetime}
   end
 
   def decode_price([{"span", [{"class", "result-price"}], ["$" <> price]}]) do
@@ -152,6 +166,13 @@ defmodule Disclist.Craigslist do
 
   def decode_url_and_id(_), do: {nil, nil, nil}
 
+  def decode_datetime([{"time", [_, {"datetime", dt}], _} | _]) do
+    case NaiveDateTime.from_iso8601(dt) do
+      {:ok, ndt} -> ndt
+      _ -> nil
+    end
+  end
+
   def decode_datetime([{"time", [_, {"datetime", dt}, _], _}]) do
     case Timex.parse(dt, "%Y-%m-%d %H:%M", :strftime) do
       {:ok, ndt} -> ndt
@@ -163,6 +184,10 @@ defmodule Disclist.Craigslist do
 
   def decode_posting_body([{_, _, [_, body]}]) do
     String.trim(body)
+  end
+
+  def decode_posting_body([{_, _, [_, body | rest]}]) do
+    String.trim(body <> Floki.text(rest))
   end
 
   def decode_posting_body(_), do: nil
