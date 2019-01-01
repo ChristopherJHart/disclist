@@ -148,8 +148,19 @@ defmodule Disclist.Craigslist do
       |> Floki.find(".date")
       |> decode_datetime()
 
-    %{postingbody: postingbody, image_urls: image_urls, datetime: datetime}
+    location =
+      html
+      |> Floki.find("a")
+      |> decode_location()
+
+    %{postingbody: postingbody, image_urls: image_urls, datetime: datetime, location: location}
   end
+
+  def decode_location([_, {"a", [{"href", "/"}], [location]} | _]) do
+    String.trim(location)
+  end
+
+  def decode_location(_), do: nil
 
   def decode_price([{"span", [{"class", "result-price"}], ["$" <> price]}]) do
     case Float.parse(price) do

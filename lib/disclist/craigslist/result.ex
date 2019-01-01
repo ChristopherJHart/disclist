@@ -11,6 +11,7 @@ defmodule Disclist.Craigslist.Result do
     field(:url, :string)
     field(:postingbody, :string)
     field(:image_urls, {:array, :string})
+    field(:location, :string)
     field(:published, :boolean, default: false)
   end
 
@@ -25,6 +26,7 @@ defmodule Disclist.Craigslist.Result do
       :url,
       :postingbody,
       :image_urls,
+      :location,
       :published
     ])
     |> validate_required(:data_id)

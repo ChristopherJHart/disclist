@@ -54,6 +54,7 @@ defmodule Disclist.DiscordConsumer do
 
     embed =
       embed
+      |> put_field("Location", to_string(result.location || "*No location*"))
       |> put_field("Price", to_string(result.price || "*No price*"))
       |> put_field("Posted", Timex.from_now(result.datetime || DateTime.utc_now()))
       |> put_field("Matched", Timex.from_now(result.result_datetime || DateTime.utc_now()))
