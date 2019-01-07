@@ -21,6 +21,7 @@ defmodule Disclist.Web.Router do
 
   get "/api/stats/posts_scraped" do
     unique_results = Stats.count_total_results()
+
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(200, Poison.encode!(%{data: unique_results}))
@@ -28,6 +29,7 @@ defmodule Disclist.Web.Router do
 
   get "/api/stats/searches_tracked" do
     unique_results = Stats.count_total_queries()
+
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(200, Poison.encode!(%{data: unique_results}))
@@ -35,6 +37,7 @@ defmodule Disclist.Web.Router do
 
   get "/api/stats/channels_active" do
     unique_results = Stats.count_total_queries()
+
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(200, Poison.encode!(%{data: unique_results}))
