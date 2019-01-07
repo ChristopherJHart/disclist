@@ -197,8 +197,12 @@ defmodule Disclist.Craigslist do
     String.trim(body)
   end
 
-  def decode_posting_body([{_, _, [_, body | rest]}]) do
+  def decode_posting_body([{_, _, [_, body | rest]}]) when is_binary(body) do
     String.trim(body <> Floki.text(rest))
+  end
+
+  def decode_posting_body([{_, _, [_, body | rest]}]) do
+    String.trim(Floki.text(body) <> Floki.text(rest))
   end
 
   def decode_posting_body(_), do: nil
