@@ -1,4 +1,9 @@
 # Disclist
+![total-posts-scraped](https://img.shields.io/badge/dynamic/json.svg?label=Total%20Posts%20Scraped&url=https%3A%2F%2Fdisclist-production.herokuapp.com%2Fapi%2Fstats%2Fposts_scraped&query=data&colorB=brightgreen)
+
+![total-searches-tracked](https://img.shields.io/badge/dynamic/json.svg?label=Total%20Searches%20Tracked&url=https%3A%2F%2Fdisclist-production.herokuapp.com%2Fapi%2Fstats%2Fsearches_tracked&query=data&colorB=brightgreen)
+
+![total-channels-active](https://img.shields.io/badge/dynamic/json.svg?label=Total%20Channels%20Active&url=https%3A%2F%2Fdisclist-production.herokuapp.com%2Fapi%2Fstats%2Fchannels_active&query=data&colorB=brightgreen)
 
 Discord Bot to scrape GitHub
 
