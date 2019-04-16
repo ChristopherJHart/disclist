@@ -27,10 +27,10 @@ Add a url to be scraped
 @Disclist add https://slo.craigslist.org/search/hhh?query=hot%20dog%20stand&sort=rel
 ```
 
-### Remove 
-Remove a url from being scraped
+### Delete 
+Delete a url from being scraped
 ```
-@Disclist remove https://slo.craigslist.org/search/hhh?query=hot%20dog%20stand&sort=rel
+@Disclist delete https://slo.craigslist.org/search/hhh?query=hot%20dog%20stand&sort=rel
 ```
 
 ### List
